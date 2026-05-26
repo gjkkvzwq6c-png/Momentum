@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause, RotateCcw, CheckCircle2, Focus } from 'lucide-react';
 import { useStore } from '../../store/useStore';
@@ -22,43 +22,66 @@ export default function FocusMode() {
   const [sessionNotes, setSessionNotes] = useState('');
   const [confetti, setConfetti] = useState(false);
   const [completed, setCompleted] = useState(false);
+
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  // Keep a ref to the current duration so the interval callback can read it
+  const durationRef = useRef(duration);
+  useEffect(() => { durationRef.current = duration; }, [duration]);
 
-  useEffect(() => {
-    if (running && timeLeft > 0) {
-      intervalRef.current = setInterval(() => {
-        setTimeLeft(t => {
-          if (t <= 1) {
-            clearInterval(intervalRef.current!);
-            setRunning(false);
-            handleComplete();
-            return 0;
-          }
-          return t - 1;
-        });
-      }, 1000);
+  const stopTimer = useCallback(() => {
+    if (intervalRef.current !== null) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, [running]);
+  }, []);
 
-  const handleComplete = () => {
-    const mins = Math.round(duration / 60);
+  const handleSessionComplete = useCallback(() => {
+    const mins = Math.round(durationRef.current / 60);
     const today = new Date().toISOString().split('T')[0];
     addFocusSession({ id: uuid(), goal: sessionGoal, notes: sessionNotes, duration: mins, completedAt: today });
     upsertDayEntry(today, { focusMinutes: (state.dayEntries[today]?.focusMinutes || 0) + mins });
     setConfetti(true);
     setCompleted(true);
+    setRunning(false);
     setTimeout(() => setConfetti(false), 100);
+  }, [sessionGoal, sessionNotes, state.dayEntries, addFocusSession, upsertDayEntry]);
+
+  const startTimer = useCallback(() => {
+    stopTimer();
+    intervalRef.current = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          stopTimer();
+          handleSessionComplete();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }, [stopTimer, handleSessionComplete]);
+
+  // Clean up on unmount
+  useEffect(() => () => stopTimer(), [stopTimer]);
+
+  const handlePlayPause = () => {
+    if (running) {
+      stopTimer();
+      setRunning(false);
+    } else {
+      setRunning(true);
+      startTimer();
+    }
   };
 
   const reset = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
+    stopTimer();
     setRunning(false);
     setTimeLeft(duration);
     setCompleted(false);
   };
 
   const setPreset = (mins: number) => {
+    stopTimer();
     const secs = mins * 60;
     setDuration(secs);
     setTimeLeft(secs);
@@ -67,10 +90,9 @@ export default function FocusMode() {
   };
 
   const progress = ((duration - timeLeft) / duration) * 100;
-  const mins = Math.floor(timeLeft / 60);
-  const secs = timeLeft % 60;
-  const timeStr = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-
+  const displayMins = Math.floor(timeLeft / 60);
+  const displaySecs = timeLeft % 60;
+  const timeStr = `${String(displayMins).padStart(2, '0')}:${String(displaySecs).padStart(2, '0')}`;
   const totalFocusMin = state.focusSessions.reduce((s, f) => s + f.duration, 0);
 
   return (
@@ -82,36 +104,53 @@ export default function FocusMode() {
         <p className="text-xs text-gray-500 mt-0.5">Deep work sessions · {state.focusSessions.length} completed</p>
       </div>
 
-      {/* Timer */}
+      {/* Timer card */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
         className="glass rounded-3xl p-8 flex flex-col items-center gap-6 relative overflow-hidden"
-        style={{ background: running ? 'rgba(59,130,246,0.05)' : 'rgba(255,255,255,0.03)', border: running ? '1px solid rgba(59,130,246,0.2)' : '1px solid rgba(255,255,255,0.06)' }}>
-        {/* Ambient pulse */}
+        style={{
+          background: running ? 'rgba(59,130,246,0.05)' : 'var(--bg-card)',
+          border: running ? '1px solid rgba(59,130,246,0.2)' : '1px solid var(--border-card)',
+        }}>
+
+        {/* Ambient pulse — pointer-events:none so it never blocks clicks */}
         {running && (
-          <motion.div className="absolute inset-0 rounded-3xl"
-            animate={{ opacity: [0, 0.04, 0] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-            style={{ background: 'radial-gradient(ellipse at center, rgba(59,130,246,0.3) 0%, transparent 70%)' }} />
+          <motion.div
+            className="absolute inset-0 rounded-3xl"
+            style={{ pointerEvents: 'none', background: 'radial-gradient(ellipse at center, rgba(59,130,246,0.25) 0%, transparent 70%)' }}
+            animate={{ opacity: [0, 0.6, 0] }}
+            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+          />
         )}
 
+        {/* Ring */}
         <div className="relative">
-          <ProgressRing value={progress} size={180} stroke={8} color={running ? '#3b82f6' : '#374151'}
-            label={timeStr} sublabel={running ? 'Focus' : 'Ready'} />
+          <ProgressRing
+            value={progress} size={180} stroke={8}
+            color={running ? '#3b82f6' : '#374151'}
+            label={timeStr}
+            sublabel={running ? 'Focus' : completed ? 'Done!' : 'Ready'}
+          />
           {running && (
-            <motion.div className="absolute inset-0 rounded-full border-2 border-blue-500/20"
+            <motion.div
+              className="absolute inset-0 rounded-full border-2 border-blue-500/20"
+              style={{ pointerEvents: 'none' }}
               animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0, 0.5] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }} />
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            />
           )}
         </div>
 
         {/* Preset buttons */}
         <div className="flex gap-2 no-select">
           {PRESETS.map(p => (
-            <button key={p.label} onClick={() => setPreset(p.minutes)}
+            <button
+              key={p.label}
+              onClick={() => setPreset(p.minutes)}
               className="px-4 py-2 rounded-xl text-xs font-semibold transition-all"
               style={{
-                background: duration === p.minutes * 60 ? 'rgba(59,130,246,0.2)' : 'rgba(255,255,255,0.05)',
+                background: duration === p.minutes * 60 ? 'rgba(59,130,246,0.2)' : 'var(--bg-card-inner)',
                 border: `1px solid ${duration === p.minutes * 60 ? 'rgba(59,130,246,0.4)' : 'transparent'}`,
-                color: duration === p.minutes * 60 ? '#60a5fa' : '#6b7280',
+                color: duration === p.minutes * 60 ? '#60a5fa' : 'var(--text-4)',
               }}>
               {p.label}
             </button>
@@ -120,14 +159,30 @@ export default function FocusMode() {
 
         {/* Controls */}
         <div className="flex items-center gap-4">
-          <button onClick={reset} className="w-11 h-11 rounded-full flex items-center justify-center hover:bg-white/10 transition-all">
+          {/* Reset */}
+          <button
+            onClick={reset}
+            className="w-11 h-11 rounded-full flex items-center justify-center transition-all"
+            style={{ background: 'var(--bg-card-inner)' }}
+          >
             <RotateCcw size={16} className="text-gray-400" />
           </button>
-          <motion.button whileTap={{ scale: 0.9 }} onClick={() => setRunning(r => !r)}
-            className="w-16 h-16 rounded-full flex items-center justify-center transition-all"
-            style={{ background: running ? '#ef4444' : '#3b82f6', boxShadow: `0 0 30px ${running ? '#ef444466' : '#3b82f666'}` }}>
-            {running ? <Pause size={24} className="text-white" /> : <Play size={24} className="text-white ml-1" />}
+
+          {/* Play / Pause */}
+          <motion.button
+            whileTap={{ scale: 0.92 }}
+            onClick={handlePlayPause}
+            className="w-16 h-16 rounded-full flex items-center justify-center"
+            style={{
+              background: running ? '#ef4444' : '#3b82f6',
+              boxShadow: `0 0 30px ${running ? '#ef444455' : '#3b82f655'}`,
+            }}
+          >
+            {running
+              ? <Pause size={24} className="text-white" />
+              : <Play  size={24} className="text-white ml-1" />}
           </motion.button>
+
           <div className="w-11" />
         </div>
       </motion.div>
@@ -137,26 +192,31 @@ export default function FocusMode() {
         className="glass rounded-2xl p-4" style={{ background: 'var(--bg-card)' }}>
         <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-2">Session Goal</p>
         <input
-          placeholder="What will you accomplish in this session?" value={sessionGoal}
-          onChange={e => setSessionGoal(e.target.value)} disabled={running}
-          className="w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/40 transition-colors"
-          style={{ background: 'var(--bg-input)', borderColor: 'var(--border-input)', color: 'var(--text-1)' }} />
+          placeholder="What will you accomplish in this session?"
+          value={sessionGoal}
+          onChange={e => setSessionGoal(e.target.value)}
+          disabled={running}
+          className="w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/40 transition-colors disabled:opacity-50"
+          style={{ background: 'var(--bg-input)', borderColor: 'var(--border-input)', color: 'var(--text-1)' }}
+        />
       </motion.div>
 
-      {/* Completion message */}
+      {/* Completion panel */}
       <AnimatePresence>
         {completed && (
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
             className="glass rounded-2xl p-5 text-center"
             style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)' }}>
             <CheckCircle2 size={32} className="text-emerald-400 mx-auto mb-2" />
             <h3 className="text-lg font-bold text-white">Session Complete!</h3>
-            <p className="text-sm text-gray-400 mt-1">+20 Momentum · Great work, keep it going.</p>
+            <p className="text-sm text-gray-400 mt-1">+20 Momentum · Great work, keep going.</p>
             <textarea
               placeholder="Session notes (optional)..." rows={2}
               value={sessionNotes} onChange={e => setSessionNotes(e.target.value)}
               className="w-full border rounded-xl px-4 py-3 text-sm focus:outline-none resize-none mt-3"
-              style={{ background: 'var(--bg-input)', borderColor: 'var(--border-input)', color: 'var(--text-1)' }} />
+              style={{ background: 'var(--bg-input)', borderColor: 'var(--border-input)', color: 'var(--text-1)' }}
+            />
             <Button onClick={reset} className="w-full mt-3">Start Another Session</Button>
           </motion.div>
         )}
@@ -176,13 +236,13 @@ export default function FocusMode() {
         ))}
       </motion.div>
 
-      {/* Recent sessions or empty nudge */}
+      {/* Recent sessions / empty nudge */}
       {state.focusSessions.length === 0 ? (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
           className="rounded-2xl p-5 text-center"
-          style={{ background: 'var(--bg-card-empty)', border: '1px dashed rgba(255,255,255,0.07)' }}>
+          style={{ background: 'var(--bg-card-empty)', border: '1px dashed var(--border-card-empty)' }}>
           <p className="text-gray-400 font-medium text-sm">No sessions yet.</p>
-          <p className="text-gray-600 text-xs mt-1">Press play above to start your first deep work session and earn +20 Momentum.</p>
+          <p className="text-gray-600 text-xs mt-1">Press play to start your first deep work session and earn +20 Momentum.</p>
         </motion.div>
       ) : (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
@@ -191,7 +251,8 @@ export default function FocusMode() {
           <div className="space-y-2">
             {[...state.focusSessions].reverse().slice(0, 5).map(s => (
               <div key={s.id} className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'rgba(59,130,246,0.1)' }}>
+                <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
+                  style={{ background: 'rgba(59,130,246,0.1)' }}>
                   <Focus size={14} className="text-blue-400" />
                 </div>
                 <div className="flex-1 min-w-0">
