@@ -172,8 +172,15 @@ export default function FocusMode() {
         ))}
       </motion.div>
 
-      {/* Recent sessions */}
-      {state.focusSessions.length > 0 && (
+      {/* Recent sessions or empty nudge */}
+      {state.focusSessions.length === 0 ? (
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+          className="rounded-2xl p-5 text-center"
+          style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed rgba(255,255,255,0.07)' }}>
+          <p className="text-gray-400 font-medium text-sm">No sessions yet.</p>
+          <p className="text-gray-600 text-xs mt-1">Press play above to start your first deep work session and earn +20 Momentum.</p>
+        </motion.div>
+      ) : (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
           className="glass rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)' }}>
           <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Recent Sessions</h3>

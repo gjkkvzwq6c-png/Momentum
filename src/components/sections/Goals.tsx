@@ -233,12 +233,21 @@ export default function Goals() {
         })}
 
         {state.macroGoals.length === 0 && (
-          <div className="glass rounded-2xl p-8 text-center" style={{ background: 'rgba(255,255,255,0.02)' }}>
-            <Target size={32} className="text-gray-600 mx-auto mb-3" />
-            <p className="text-gray-400 text-sm font-medium">No goals yet</p>
-            <p className="text-gray-600 text-xs mt-1">Create your first macro goal to start building momentum</p>
-            <Button onClick={() => setShowAddGoal(true)} className="mt-4" size="sm">Create First Goal</Button>
-          </div>
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+            className="rounded-2xl p-8 text-center"
+            style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed rgba(255,255,255,0.08)' }}>
+            <div className="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center mb-4"
+              style={{ background: 'rgba(59,130,246,0.1)' }}>
+              <Target size={26} className="text-blue-400" />
+            </div>
+            <p className="text-white font-semibold text-base">Your biggest wins start here.</p>
+            <p className="text-gray-500 text-sm mt-1.5 leading-relaxed max-w-xs mx-auto">
+              Define where you're going. Create your first Macro Goal and break it into milestones you can attack daily.
+            </p>
+            <Button onClick={() => setShowAddGoal(true)} className="mt-5 flex items-center gap-2 mx-auto" size="md">
+              <Plus size={15} /> Create First Goal
+            </Button>
+          </motion.div>
         )}
       </div>
 

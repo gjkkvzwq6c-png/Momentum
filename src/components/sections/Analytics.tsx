@@ -89,8 +89,24 @@ export default function Analytics() {
         ))}
       </div>
 
+      {/* Empty state — no activity yet */}
+      {state.habits.length === 0 && state.macroGoals.length === 0 && state.focusSessions.length === 0 && (
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+          className="rounded-2xl p-6 text-center"
+          style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed rgba(255,255,255,0.08)' }}>
+          <div className="w-12 h-12 rounded-2xl mx-auto flex items-center justify-center mb-3"
+            style={{ background: 'rgba(59,130,246,0.1)' }}>
+            <BarChart2 size={22} className="text-blue-400" />
+          </div>
+          <p className="text-white font-semibold">No data yet.</p>
+          <p className="text-gray-500 text-sm mt-1.5 leading-relaxed max-w-xs mx-auto">
+            Your analytics will appear here as you complete habits, goals, and focus sessions. Start building your streak today.
+          </p>
+        </motion.div>
+      )}
+
       {/* Habit Consistency Chart */}
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+      {state.habits.length > 0 && <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
         className="glass rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)' }}>
         <h3 className="text-sm font-semibold text-white mb-4">Habit Consistency (7 days)</h3>
         <ResponsiveContainer width="100%" height={120}>
@@ -105,7 +121,7 @@ export default function Analytics() {
             </Bar>
           </BarChart>
         </ResponsiveContainer>
-      </motion.div>
+      </motion.div>}
 
       {/* Revenue Chart */}
       {revenueData.some(d => d.value > 0) && (

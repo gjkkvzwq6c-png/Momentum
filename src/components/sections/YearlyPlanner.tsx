@@ -170,6 +170,28 @@ export default function YearlyPlanner() {
         ))}
       </div>
 
+      {/* Empty state nudge */}
+      {Object.keys(state.dayEntries).length === 0 && (
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+          className="rounded-2xl p-6 text-center"
+          style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed rgba(255,255,255,0.08)' }}>
+          <div className="w-12 h-12 rounded-2xl mx-auto flex items-center justify-center mb-3"
+            style={{ background: 'rgba(59,130,246,0.1)' }}>
+            <Calendar size={22} className="text-blue-400" />
+          </div>
+          <p className="text-white font-semibold">Start tracking today.</p>
+          <p className="text-gray-500 text-sm mt-1.5 leading-relaxed max-w-xs mx-auto">
+            Your year begins with one entry. Tap any day on the calendar above to log your wins, revenue, and lessons.
+          </p>
+          <motion.button whileTap={{ scale: 0.97 }}
+            onClick={() => openDay(today)}
+            className="mt-4 px-5 py-2.5 rounded-xl text-sm font-semibold text-white"
+            style={{ background: '#3b82f6' }}>
+            Log Today's Entry
+          </motion.button>
+        </motion.div>
+      )}
+
       {/* Day Detail Modal */}
       <Modal open={!!selectedDay} onClose={() => setSelectedDay(null)} title={selectedDay ? new Date(selectedDay + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) : ''}>
         {selectedDay && (

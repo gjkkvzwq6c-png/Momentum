@@ -128,12 +128,30 @@ export default function StrategyVault() {
         ))}
 
         {filtered.length === 0 && (
-          <div className="glass rounded-2xl p-8 text-center" style={{ background: 'rgba(255,255,255,0.02)' }}>
-            <BookOpen size={32} className="text-gray-600 mx-auto mb-3" />
-            <p className="text-gray-400 text-sm font-medium">No strategies found</p>
-            <p className="text-gray-600 text-xs mt-1">Store your systems, scripts, and playbooks here</p>
-            <Button onClick={() => setShowAdd(true)} className="mt-4" size="sm">Add Strategy</Button>
-          </div>
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+            className="rounded-2xl p-8 text-center"
+            style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed rgba(255,255,255,0.08)' }}>
+            <div className="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center mb-4"
+              style={{ background: 'rgba(139,92,246,0.1)' }}>
+              <BookOpen size={26} className="text-purple-400" />
+            </div>
+            {search || activeCategory !== 'All' ? (
+              <>
+                <p className="text-white font-semibold text-base">No results found.</p>
+                <p className="text-gray-500 text-sm mt-1.5">Try adjusting your search or filter.</p>
+              </>
+            ) : (
+              <>
+                <p className="text-white font-semibold text-base">Your playbook is empty.</p>
+                <p className="text-gray-500 text-sm mt-1.5 leading-relaxed max-w-xs mx-auto">
+                  Store your best scripts, systems, and ideas here. Every winning business runs on documented strategies.
+                </p>
+                <Button onClick={() => setShowAdd(true)} className="mt-5 flex items-center gap-2 mx-auto" size="md">
+                  <Plus size={15} /> Save First Strategy
+                </Button>
+              </>
+            )}
+          </motion.div>
         )}
       </div>
 

@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import type { AppState, MacroGoal, MicroGoal, Habit, Strategy, DayEntry, FocusSession, UserSettings } from '../types';
 import { createInitialState } from '../data/initialData';
 
-const STORAGE_KEY = 'momentum_os_v1';
+const STORAGE_KEY = 'momentum_os_v2';
 
 function loadState(): AppState {
   try {

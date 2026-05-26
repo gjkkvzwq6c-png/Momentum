@@ -68,8 +68,8 @@ export default function Habits() {
         </Button>
       </div>
 
-      {/* Today summary */}
-      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+      {/* Today summary — only show when habits exist */}
+      {totalHabits > 0 && <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
         className="glass rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)' }}>
         <div className="flex items-center justify-between">
           <div>
@@ -83,7 +83,7 @@ export default function Habits() {
             ))}
           </div>
         </div>
-      </motion.div>
+      </motion.div>}
 
       {/* Habit List */}
       <div className="space-y-3">
@@ -141,12 +141,21 @@ export default function Habits() {
         ))}
 
         {state.habits.length === 0 && (
-          <div className="glass rounded-2xl p-8 text-center" style={{ background: 'rgba(255,255,255,0.02)' }}>
-            <Flame size={32} className="text-gray-600 mx-auto mb-3" />
-            <p className="text-gray-400 text-sm font-medium">No habits yet</p>
-            <p className="text-gray-600 text-xs mt-1">Build discipline one habit at a time</p>
-            <Button onClick={() => setShowAdd(true)} className="mt-4" size="sm">Add First Habit</Button>
-          </div>
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+            className="rounded-2xl p-8 text-center"
+            style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed rgba(255,255,255,0.08)' }}>
+            <div className="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center mb-4"
+              style={{ background: 'rgba(251,146,60,0.1)' }}>
+              <Flame size={26} className="text-orange-400" />
+            </div>
+            <p className="text-white font-semibold text-base">Build the habits that build the business.</p>
+            <p className="text-gray-500 text-sm mt-1.5 leading-relaxed max-w-xs mx-auto">
+              Daily consistency compounds over time. Add your first habit and start your streak today.
+            </p>
+            <Button onClick={() => setShowAdd(true)} className="mt-5 flex items-center gap-2 mx-auto" size="md">
+              <Plus size={15} /> Add First Habit
+            </Button>
+          </motion.div>
         )}
       </div>
 

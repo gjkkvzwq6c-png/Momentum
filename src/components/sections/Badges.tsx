@@ -57,6 +57,27 @@ export default function Badges() {
         </div>
       </motion.div>
 
+      {/* Zero-state callout when nothing is unlocked */}
+      {unlocked.length === 0 && (
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+          className="rounded-2xl p-6 text-center"
+          style={{ background: 'rgba(245,158,11,0.04)', border: '1px dashed rgba(245,158,11,0.15)' }}>
+          <div className="text-4xl mb-3">🏆</div>
+          <p className="text-white font-semibold">No badges unlocked yet.</p>
+          <p className="text-gray-500 text-sm mt-1.5 leading-relaxed max-w-xs mx-auto">
+            Your first win is waiting. Complete goals, build streaks, and log focus sessions to earn badges.
+          </p>
+          <div className="flex justify-center gap-4 mt-4">
+            {['🎯', '🔥', '⚡'].map((icon, i) => (
+              <div key={i} className="w-10 h-10 rounded-xl flex items-center justify-center text-xl opacity-30"
+                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                {icon}
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
       {/* Unlocked Badges */}
       {unlocked.length > 0 && (
         <div>
