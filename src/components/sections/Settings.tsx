@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, Palette, RefreshCw, Download, MessageSquare, AlertTriangle } from 'lucide-react';
+import { User, Palette, RefreshCw, Download, MessageSquare, AlertTriangle, Sun, Moon } from 'lucide-react';
 import { useStore } from '../../store/useStore';
 import { Input, Select } from '../shared/Input';
 import Button from '../shared/Button';
@@ -13,6 +13,12 @@ export default function Settings() {
   const [tone, setTone] = useState(state.user.motivationalTone);
   const [saved, setSaved] = useState(false);
   const [showReset, setShowReset] = useState(false);
+
+  const isDark = state.user.theme !== 'light';
+
+  const toggleTheme = () => {
+    updateUser({ theme: isDark ? 'light' : 'dark' });
+  };
 
   const save = () => {
     updateUser({ name, businessName: bizName, motivationalTone: tone as any });
@@ -33,7 +39,7 @@ export default function Settings() {
 
   const Section = ({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) => (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-      className="glass rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.03)' }}>
+      className="glass rounded-2xl p-5">
       <div className="flex items-center gap-2 mb-4">
         <span className="text-blue-400">{icon}</span>
         <h3 className="font-semibold text-sm text-white">{title}</h3>
@@ -56,6 +62,46 @@ export default function Settings() {
         </div>
       </Section>
 
+      <Section icon={<Palette size={16} />} title="Appearance">
+        {/* Theme toggle */}
+        <button
+          onClick={toggleTheme}
+          className="w-full flex items-center justify-between py-2 px-1 rounded-xl transition-all"
+          style={{ cursor: 'pointer' }}
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center"
+              style={{ background: isDark ? 'rgba(139,92,246,0.15)' : 'rgba(251,191,36,0.15)' }}>
+              {isDark
+                ? <Moon size={16} className="text-purple-400" />
+                : <Sun size={16} className="text-yellow-400" />}
+            </div>
+            <div className="text-left">
+              <p className="text-sm font-medium text-white">{isDark ? 'Dark Mode' : 'Light Mode'}</p>
+              <p className="text-xs text-gray-500">{isDark ? 'Easy on the eyes at night' : 'Crisp and clean for daytime'}</p>
+            </div>
+          </div>
+          {/* Toggle pill */}
+          <motion.div
+            layout
+            className="relative flex items-center rounded-full shrink-0"
+            style={{
+              width: 48,
+              height: 28,
+              background: isDark ? '#3b82f6' : '#e2e8f0',
+              padding: 3,
+            }}
+          >
+            <motion.div
+              layout
+              animate={{ x: isDark ? 20 : 0 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+              className="w-5 h-5 rounded-full bg-white shadow-sm"
+            />
+          </motion.div>
+        </button>
+      </Section>
+
       <Section icon={<MessageSquare size={16} />} title="Motivational Tone">
         <Select label="Communication Style" value={tone} onChange={e => setTone(e.target.value as any)}>
           <option value="aggressive">Aggressive — No excuses, no mercy</option>
@@ -64,33 +110,17 @@ export default function Settings() {
         </Select>
       </Section>
 
-      <Section icon={<Palette size={16} />} title="Display">
-        <div className="flex items-center justify-between py-2">
-          <div>
-            <p className="text-sm text-white font-medium">Dark Mode</p>
-            <p className="text-xs text-gray-500">Always enabled for optimal focus</p>
-          </div>
-          <div className="w-12 h-6 rounded-full bg-blue-600 flex items-center justify-end px-1">
-            <div className="w-4 h-4 rounded-full bg-white" />
-          </div>
-        </div>
-      </Section>
-
-      <div className="flex gap-2">
-        <Button onClick={save} className="flex-1">
-          {saved ? '✓ Saved!' : 'Save Changes'}
-        </Button>
-      </div>
+      <Button onClick={save} className="w-full">
+        {saved ? '✓ Saved!' : 'Save Changes'}
+      </Button>
 
       <Section icon={<Download size={16} />} title="Data & Privacy">
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-white font-medium">Export Progress</p>
-              <p className="text-xs text-gray-500">Download all your data as JSON</p>
-            </div>
-            <Button onClick={exportData} variant="secondary" size="sm">Export</Button>
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-white font-medium">Export Progress</p>
+            <p className="text-xs text-gray-500">Download all your data as JSON</p>
           </div>
+          <Button onClick={exportData} variant="secondary" size="sm">Export</Button>
         </div>
       </Section>
 
@@ -98,13 +128,12 @@ export default function Settings() {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-white font-medium">Reset All Data</p>
-            <p className="text-xs text-gray-500">Start fresh with demo data</p>
+            <p className="text-xs text-gray-500">Clear all goals, habits, and progress</p>
           </div>
           <Button onClick={() => setShowReset(true)} variant="danger" size="sm">Reset</Button>
         </div>
       </Section>
 
-      {/* Onboarding answers preview */}
       {state.user.onboardingAnswers.biggestGoal && (
         <Section icon={<User size={16} />} title="Your Vision">
           <div className="space-y-2.5">
@@ -113,7 +142,7 @@ export default function Settings() {
               { label: 'Biggest Goal', value: state.user.onboardingAnswers.biggestGoal },
               { label: 'Success Vision', value: state.user.onboardingAnswers.successDefinition },
             ].filter(i => i.value).map(item => (
-              <div key={item.label} className="p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.04)' }}>
+              <div key={item.label} className="p-3 rounded-xl" style={{ background: 'var(--bg-card-inner)' }}>
                 <p className="text-[10px] text-gray-500 uppercase tracking-wide font-semibold">{item.label}</p>
                 <p className="text-sm text-gray-300 mt-0.5">{item.value}</p>
               </div>
@@ -124,18 +153,18 @@ export default function Settings() {
 
       <div className="text-center py-4">
         <p className="text-xs text-gray-600">Momentum OS · Built for champions</p>
-        <p className="text-xs text-gray-700 mt-0.5">All data stored locally on your device</p>
+        <p className="text-xs text-gray-600 mt-0.5">All data stored locally on your device</p>
       </div>
 
-      {/* Reset Confirm Modal */}
       <Modal open={showReset} onClose={() => setShowReset(false)} title="Reset Data">
         <div className="text-center space-y-4">
-          <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center" style={{ background: 'rgba(239,68,68,0.1)' }}>
+          <div className="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center"
+            style={{ background: 'rgba(239,68,68,0.1)' }}>
             <AlertTriangle size={28} className="text-red-400" />
           </div>
           <div>
             <p className="text-white font-semibold">Are you sure?</p>
-            <p className="text-sm text-gray-400 mt-1">This will clear all your goals, habits, and progress. Demo data will be restored.</p>
+            <p className="text-sm text-gray-400 mt-1">This will clear all your goals, habits, and progress.</p>
           </div>
           <div className="flex gap-3">
             <Button onClick={() => setShowReset(false)} variant="secondary" className="flex-1">Cancel</Button>

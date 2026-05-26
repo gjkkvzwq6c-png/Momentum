@@ -22,7 +22,7 @@ export default function Modal({ open, onClose, title, children, maxWidth = 'max-
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
           <motion.div
             className={`relative w-full ${maxWidth} glass-strong rounded-t-2xl sm:rounded-2xl overflow-hidden`}
-            style={{ background: '#111118', border: '1px solid rgba(255,255,255,0.1)' }}
+            style={{ background: 'var(--bg-modal)', border: '1px solid var(--border-modal)' }}
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 50, opacity: 0 }}

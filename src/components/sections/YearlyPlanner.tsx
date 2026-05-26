@@ -94,7 +94,7 @@ export default function YearlyPlanner() {
 
       {/* Month Navigation */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-        className="glass rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)' }}>
+        className="glass rounded-2xl p-4" style={{ background: 'var(--bg-card)' }}>
         <div className="flex items-center justify-between mb-4">
           <button onClick={prevMonth} className="p-2 rounded-xl hover:bg-white/10 transition-all">
             <ChevronLeft size={16} className="text-gray-400" />
@@ -162,7 +162,7 @@ export default function YearlyPlanner() {
           { label: 'Revenue Days', value: Object.values(state.dayEntries).filter(e => e.revenue > 0).length, icon: <TrendingUp size={14} /> },
         ].map(stat => (
           <motion.div key={stat.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-            className="glass rounded-2xl p-3 text-center" style={{ background: 'rgba(255,255,255,0.03)' }}>
+            className="glass rounded-2xl p-3 text-center" style={{ background: 'var(--bg-card)' }}>
             <div className="flex justify-center mb-1 text-blue-400">{stat.icon}</div>
             <p className="text-xl font-bold text-white">{stat.value}</p>
             <p className="text-[10px] text-gray-500">{stat.label}</p>
@@ -174,7 +174,7 @@ export default function YearlyPlanner() {
       {Object.keys(state.dayEntries).length === 0 && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
           className="rounded-2xl p-6 text-center"
-          style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed rgba(255,255,255,0.08)' }}>
+          style={{ background: 'var(--bg-card-empty)', border: '1px dashed rgba(255,255,255,0.08)' }}>
           <div className="w-12 h-12 rounded-2xl mx-auto flex items-center justify-center mb-3"
             style={{ background: 'rgba(59,130,246,0.1)' }}>
             <Calendar size={22} className="text-blue-400" />
@@ -211,7 +211,8 @@ export default function YearlyPlanner() {
               <label className="block text-xs text-gray-400 mb-1.5 font-medium uppercase tracking-wide">Revenue ($)</label>
               <input type="number" min={0} value={editForm.revenue || ''}
                 onChange={e => setEditForm(f => ({ ...f, revenue: +e.target.value }))}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500/50"
+                className="w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50"
+                style={{ background: 'var(--bg-input)', borderColor: 'var(--border-input)', color: 'var(--text-1)' }}
                 placeholder="0" />
             </div>
 

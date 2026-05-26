@@ -1,18 +1,99 @@
 @import "tailwindcss";
 
+/* ─── Theme tokens ──────────────────────────────────────────── */
+:root {
+  /* page */
+  --bg-page:        #0a0a0f;
+  /* cards */
+  --bg-card:        rgba(255, 255, 255, 0.03);
+  --bg-card-alt:    rgba(255, 255, 255, 0.025);
+  --bg-card-empty:  rgba(255, 255, 255, 0.02);
+  --bg-card-inner:  rgba(255, 255, 255, 0.04);
+  --bg-card-hi:     rgba(255, 255, 255, 0.07);
+  /* navigation */
+  --bg-nav-top:     rgba(10, 10, 15, 0.95);
+  --bg-nav-bottom:  rgba(10, 10, 15, 0.97);
+  /* modal */
+  --bg-modal:       #111118;
+  /* inputs */
+  --bg-input:       rgba(255, 255, 255, 0.05);
+  /* borders */
+  --border-nav-top:    rgba(255, 255, 255, 0.05);
+  --border-nav-bottom: rgba(255, 255, 255, 0.06);
+  --border-card:       rgba(255, 255, 255, 0.07);
+  --border-card-alt:   rgba(255, 255, 255, 0.06);
+  --border-card-empty: rgba(255, 255, 255, 0.08);
+  --border-modal:      rgba(255, 255, 255, 0.1);
+  --border-input:      rgba(255, 255, 255, 0.1);
+  /* text */
+  --text-1: #ffffff;
+  --text-2: #d1d5db;
+  --text-3: #9ca3af;
+  --text-4: #6b7280;
+  --text-5: #374151;
+}
+
+html[data-theme="light"] {
+  --bg-page:        #f0f4f8;
+  --bg-card:        rgba(255, 255, 255, 0.88);
+  --bg-card-alt:    rgba(255, 255, 255, 0.82);
+  --bg-card-empty:  rgba(255, 255, 255, 0.65);
+  --bg-card-inner:  rgba(0, 0, 0, 0.04);
+  --bg-card-hi:     rgba(255, 255, 255, 0.95);
+  --bg-nav-top:     rgba(240, 244, 248, 0.97);
+  --bg-nav-bottom:  rgba(240, 244, 248, 0.99);
+  --bg-modal:       #ffffff;
+  --bg-input:       rgba(0, 0, 0, 0.04);
+  --border-nav-top:    rgba(0, 0, 0, 0.07);
+  --border-nav-bottom: rgba(0, 0, 0, 0.07);
+  --border-card:       rgba(0, 0, 0, 0.07);
+  --border-card-alt:   rgba(0, 0, 0, 0.06);
+  --border-card-empty: rgba(0, 0, 0, 0.08);
+  --border-modal:      rgba(0, 0, 0, 0.1);
+  --border-input:      rgba(0, 0, 0, 0.12);
+  --text-1: #0f172a;
+  --text-2: #1e293b;
+  --text-3: #475569;
+  --text-4: #64748b;
+  --text-5: #94a3b8;
+}
+
+/* ─── Tailwind text-color overrides for light mode ──────────── */
+html[data-theme="light"] .text-white          { color: var(--text-1) !important; }
+html[data-theme="light"] .text-gray-100       { color: var(--text-2) !important; }
+html[data-theme="light"] .text-gray-200       { color: var(--text-2) !important; }
+html[data-theme="light"] .text-gray-300       { color: var(--text-2) !important; }
+html[data-theme="light"] .text-gray-400       { color: var(--text-3) !important; }
+html[data-theme="light"] .text-gray-500       { color: var(--text-4) !important; }
+html[data-theme="light"] .text-gray-600       { color: var(--text-5) !important; }
+html[data-theme="light"] .text-gray-700       { color: var(--text-5) !important; }
+html[data-theme="light"] .placeholder-gray-500::placeholder { color: var(--text-5) !important; }
+html[data-theme="light"] .placeholder-gray-600::placeholder { color: var(--text-5) !important; }
+
+/* ─── Tailwind bg overrides for light mode ──────────────────── */
+html[data-theme="light"] .bg-white\/5   { background: rgba(0,0,0,0.04) !important; }
+html[data-theme="light"] .bg-white\/8   { background: rgba(0,0,0,0.06) !important; }
+html[data-theme="light"] .bg-white\/10  { background: rgba(0,0,0,0.07) !important; }
+html[data-theme="light"] .bg-white\/15  { background: rgba(0,0,0,0.09) !important; }
+html[data-theme="light"] .border-white\/5  { border-color: rgba(0,0,0,0.05) !important; }
+html[data-theme="light"] .border-white\/10 { border-color: rgba(0,0,0,0.1)  !important; }
+
+/* calendar heat-map: keep blue accent readable in light */
+html[data-theme="light"] .text-gray-600.font-semibold { color: #94a3b8 !important; }
+
+/* ─── Base ───────────────────────────────────────────────────── */
 @layer base {
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
 
   body {
     margin: 0;
     padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-    background: #0a0a0f;
-    color: #ffffff;
+    background: var(--bg-page);
+    color: var(--text-1);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+    transition: background 0.3s ease, color 0.3s ease;
   }
 
   #root {
@@ -24,31 +105,42 @@
     min-height: 100svh;
     display: flex;
     flex-direction: column;
-    background: #0a0a0f;
+    background: var(--bg-page);
+    transition: background 0.3s ease;
   }
 
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
+  html[data-theme="light"] ::-webkit-scrollbar-thumb { background: #cbd5e1; }
 }
 
+/* ─── Utilities ──────────────────────────────────────────────── */
 @layer utilities {
   .glass {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255,255,255,0.04);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255,255,255,0.08);
   }
 
   .glass-strong {
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(255,255,255,0.07);
     backdrop-filter: blur(30px);
     -webkit-backdrop-filter: blur(30px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255,255,255,0.12);
   }
 
-  .glow-blue {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  html[data-theme="light"] .glass {
+    background: rgba(255,255,255,0.82);
+    border-color: rgba(0,0,0,0.07);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+
+  html[data-theme="light"] .glass-strong {
+    background: rgba(255,255,255,0.95);
+    border-color: rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   }
 
   .text-gradient {
@@ -61,43 +153,39 @@
   .progress-bar {
     background: linear-gradient(90deg, #3b82f6, #8b5cf6);
     border-radius: 999px;
-    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
   }
 
   .badge-legendary {
     animation: legendaryGlow 2s ease-in-out infinite alternate;
   }
-
   @keyframes legendaryGlow {
-    from { box-shadow: 0 0 10px rgba(251, 191, 36, 0.4); }
-    to { box-shadow: 0 0 25px rgba(251, 191, 36, 0.8), 0 0 50px rgba(251, 191, 36, 0.3); }
+    from { box-shadow: 0 0 10px rgba(251,191,36,0.4); }
+    to   { box-shadow: 0 0 25px rgba(251,191,36,0.8), 0 0 50px rgba(251,191,36,0.3); }
   }
 
   .badge-epic {
     animation: epicGlow 2s ease-in-out infinite alternate;
   }
-
   @keyframes epicGlow {
-    from { box-shadow: 0 0 10px rgba(139, 92, 246, 0.4); }
-    to { box-shadow: 0 0 25px rgba(139, 92, 246, 0.8), 0 0 50px rgba(139, 92, 246, 0.3); }
+    from { box-shadow: 0 0 10px rgba(139,92,246,0.4); }
+    to   { box-shadow: 0 0 25px rgba(139,92,246,0.8), 0 0 50px rgba(139,92,246,0.3); }
   }
 
   .badge-rare {
     animation: rareGlow 2s ease-in-out infinite alternate;
   }
-
   @keyframes rareGlow {
-    from { box-shadow: 0 0 8px rgba(59, 130, 246, 0.4); }
-    to { box-shadow: 0 0 20px rgba(59, 130, 246, 0.7); }
+    from { box-shadow: 0 0 8px rgba(59,130,246,0.4); }
+    to   { box-shadow: 0 0 20px rgba(59,130,246,0.7); }
   }
 
   .floating {
     animation: floating 3s ease-in-out infinite;
   }
-
   @keyframes floating {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-6px); }
+    50%       { transform: translateY(-6px); }
   }
 
   .no-select {
@@ -108,10 +196,9 @@
   .animate-pulse-scale {
     animation: pulseScale 0.6s ease-out;
   }
-
   @keyframes pulseScale {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.15); }
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.15); }
     100% { transform: scale(1); }
   }
 }

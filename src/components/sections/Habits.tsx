@@ -70,7 +70,7 @@ export default function Habits() {
 
       {/* Today summary — only show when habits exist */}
       {totalHabits > 0 && <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-        className="glass rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)' }}>
+        className="glass rounded-2xl p-4" style={{ background: 'var(--bg-card)' }}>
         <div className="flex items-center justify-between">
           <div>
             <p className="text-xs text-gray-400 font-semibold uppercase tracking-widest">Today's Progress</p>
@@ -90,7 +90,7 @@ export default function Habits() {
         {state.habits.map((habit, index) => (
           <motion.div key={habit.id} layout
             initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.04 }}
-            className="glass rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)', border: habit.completedToday ? `1px solid ${habit.color}30` : '1px solid rgba(255,255,255,0.06)' }}>
+            className="glass rounded-2xl p-4" style={{ background: 'var(--bg-card)', border: habit.completedToday ? `1px solid ${habit.color}30` : '1px solid rgba(255,255,255,0.06)' }}>
             <div className="flex items-start gap-3">
               {/* Check button */}
               <motion.button whileTap={{ scale: 0.85 }} onClick={() => !habit.completedToday && handleComplete(habit.id)}
@@ -143,7 +143,7 @@ export default function Habits() {
         {state.habits.length === 0 && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
             className="rounded-2xl p-8 text-center"
-            style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed rgba(255,255,255,0.08)' }}>
+            style={{ background: 'var(--bg-card-empty)', border: '1px dashed rgba(255,255,255,0.08)' }}>
             <div className="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center mb-4"
               style={{ background: 'rgba(251,146,60,0.1)' }}>
               <Flame size={26} className="text-orange-400" />

@@ -134,11 +134,13 @@ export default function FocusMode() {
 
       {/* Session Goal */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-        className="glass rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)' }}>
+        className="glass rounded-2xl p-4" style={{ background: 'var(--bg-card)' }}>
         <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold mb-2">Session Goal</p>
-        <input className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-blue-500/40"
+        <input
           placeholder="What will you accomplish in this session?" value={sessionGoal}
-          onChange={e => setSessionGoal(e.target.value)} disabled={running} />
+          onChange={e => setSessionGoal(e.target.value)} disabled={running}
+          className="w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/40 transition-colors"
+          style={{ background: 'var(--bg-input)', borderColor: 'var(--border-input)', color: 'var(--text-1)' }} />
       </motion.div>
 
       {/* Completion message */}
@@ -150,9 +152,11 @@ export default function FocusMode() {
             <CheckCircle2 size={32} className="text-emerald-400 mx-auto mb-2" />
             <h3 className="text-lg font-bold text-white">Session Complete!</h3>
             <p className="text-sm text-gray-400 mt-1">+20 Momentum · Great work, keep it going.</p>
-            <textarea className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none resize-none mt-3"
+            <textarea
               placeholder="Session notes (optional)..." rows={2}
-              value={sessionNotes} onChange={e => setSessionNotes(e.target.value)} />
+              value={sessionNotes} onChange={e => setSessionNotes(e.target.value)}
+              className="w-full border rounded-xl px-4 py-3 text-sm focus:outline-none resize-none mt-3"
+              style={{ background: 'var(--bg-input)', borderColor: 'var(--border-input)', color: 'var(--text-1)' }} />
             <Button onClick={reset} className="w-full mt-3">Start Another Session</Button>
           </motion.div>
         )}
@@ -165,7 +169,7 @@ export default function FocusMode() {
           { label: 'Total Sessions', value: state.focusSessions.length, color: '#3b82f6' },
           { label: 'Total Hours', value: `${Math.round(totalFocusMin / 60 * 10) / 10}h`, color: '#8b5cf6' },
         ].map(s => (
-          <div key={s.label} className="glass rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)' }}>
+          <div key={s.label} className="glass rounded-2xl p-4" style={{ background: 'var(--bg-card)' }}>
             <p className="text-2xl font-bold" style={{ color: s.color }}>{s.value}</p>
             <p className="text-xs text-gray-500 mt-0.5">{s.label}</p>
           </div>
@@ -176,13 +180,13 @@ export default function FocusMode() {
       {state.focusSessions.length === 0 ? (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
           className="rounded-2xl p-5 text-center"
-          style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed rgba(255,255,255,0.07)' }}>
+          style={{ background: 'var(--bg-card-empty)', border: '1px dashed rgba(255,255,255,0.07)' }}>
           <p className="text-gray-400 font-medium text-sm">No sessions yet.</p>
           <p className="text-gray-600 text-xs mt-1">Press play above to start your first deep work session and earn +20 Momentum.</p>
         </motion.div>
       ) : (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-          className="glass rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)' }}>
+          className="glass rounded-2xl p-4" style={{ background: 'var(--bg-card)' }}>
           <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Recent Sessions</h3>
           <div className="space-y-2">
             {[...state.focusSessions].reverse().slice(0, 5).map(s => (

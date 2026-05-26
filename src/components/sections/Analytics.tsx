@@ -6,7 +6,7 @@ import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContai
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="glass-strong rounded-xl px-3 py-2" style={{ background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.1)' }}>
+      <div className="glass-strong rounded-xl px-3 py-2" style={{ background: 'var(--bg-modal)', border: '1px solid var(--border-modal)' }}>
         <p className="text-xs text-gray-400">{label}</p>
         <p className="text-sm font-bold text-white">{payload[0].value}</p>
       </div>
@@ -79,7 +79,7 @@ export default function Analytics() {
       <div className="grid grid-cols-2 gap-3">
         {stats.map((stat, i) => (
           <motion.div key={stat.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-            className="glass rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)' }}>
+            className="glass rounded-2xl p-4" style={{ background: 'var(--bg-card)' }}>
             <div className="flex items-center gap-2 mb-2" style={{ color: stat.color }}>
               {stat.icon}
               <span className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">{stat.label}</span>
@@ -93,7 +93,7 @@ export default function Analytics() {
       {state.habits.length === 0 && state.macroGoals.length === 0 && state.focusSessions.length === 0 && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
           className="rounded-2xl p-6 text-center"
-          style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed rgba(255,255,255,0.08)' }}>
+          style={{ background: 'var(--bg-card-empty)', border: '1px dashed rgba(255,255,255,0.08)' }}>
           <div className="w-12 h-12 rounded-2xl mx-auto flex items-center justify-center mb-3"
             style={{ background: 'rgba(59,130,246,0.1)' }}>
             <BarChart2 size={22} className="text-blue-400" />
@@ -107,7 +107,7 @@ export default function Analytics() {
 
       {/* Habit Consistency Chart */}
       {state.habits.length > 0 && <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
-        className="glass rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)' }}>
+        className="glass rounded-2xl p-4" style={{ background: 'var(--bg-card)' }}>
         <h3 className="text-sm font-semibold text-white mb-4">Habit Consistency (7 days)</h3>
         <ResponsiveContainer width="100%" height={120}>
           <BarChart data={habitData} barSize={24}>
@@ -126,7 +126,7 @@ export default function Analytics() {
       {/* Revenue Chart */}
       {revenueData.some(d => d.value > 0) && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}
-          className="glass rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)' }}>
+          className="glass rounded-2xl p-4" style={{ background: 'var(--bg-card)' }}>
           <h3 className="text-sm font-semibold text-white mb-4">Revenue Trend (7 days)</h3>
           <ResponsiveContainer width="100%" height={120}>
             <AreaChart data={revenueData}>
@@ -148,7 +148,7 @@ export default function Analytics() {
       {/* Goal Progress */}
       {goalData.length > 0 && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-          className="glass rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)' }}>
+          className="glass rounded-2xl p-4" style={{ background: 'var(--bg-card)' }}>
           <h3 className="text-sm font-semibold text-white mb-4">Goal Progress</h3>
           <div className="space-y-3">
             {goalData.map(g => (
@@ -172,7 +172,7 @@ export default function Analytics() {
       {/* Focus Sessions */}
       {focusData.some(d => d.value > 0) && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}
-          className="glass rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)' }}>
+          className="glass rounded-2xl p-4" style={{ background: 'var(--bg-card)' }}>
           <h3 className="text-sm font-semibold text-white mb-4">Focus Minutes (7 days)</h3>
           <ResponsiveContainer width="100%" height={100}>
             <BarChart data={focusData} barSize={20}>

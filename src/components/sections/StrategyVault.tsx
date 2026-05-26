@@ -90,7 +90,7 @@ export default function StrategyVault() {
           <motion.div key={strategy.id} layout
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
             className="glass rounded-2xl p-4 cursor-pointer"
-            style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.06)' }}
+            style={{ background: 'var(--bg-card-alt)', border: '1px solid rgba(255,255,255,0.06)' }}
             onClick={() => setSelected(strategy)}>
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1 min-w-0">
@@ -130,7 +130,7 @@ export default function StrategyVault() {
         {filtered.length === 0 && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
             className="rounded-2xl p-8 text-center"
-            style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed rgba(255,255,255,0.08)' }}>
+            style={{ background: 'var(--bg-card-empty)', border: '1px dashed rgba(255,255,255,0.08)' }}>
             <div className="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center mb-4"
               style={{ background: 'rgba(139,92,246,0.1)' }}>
               <BookOpen size={26} className="text-purple-400" />
@@ -180,7 +180,7 @@ export default function StrategyVault() {
               <span className="text-xs text-gray-500">{new Date(selected.createdAt).toLocaleDateString()}</span>
             </div>
             <div className="p-4 rounded-xl text-sm text-gray-300 leading-relaxed whitespace-pre-wrap"
-              style={{ background: 'rgba(255,255,255,0.04)' }}>
+              style={{ background: 'var(--bg-card-inner)' }}>
               {selected.notes}
             </div>
             {selected.tags.length > 0 && (

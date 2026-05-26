@@ -120,7 +120,7 @@ export default function Dashboard({ onNavigate }: Props) {
 
       {/* Today's Priorities — habits or empty state */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.09 }}
-        className="glass rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.03)' }}>
+        className="glass rounded-2xl p-5" style={{ background: 'var(--bg-card)' }}>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <CheckCircle2 size={14} className="text-blue-400" />
@@ -173,7 +173,7 @@ export default function Dashboard({ onNavigate }: Props) {
       {/* Active Goal — or empty state */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.11 }}>
         {hasGoals && topGoal ? (
-          <div className="glass rounded-2xl p-5 cursor-pointer" style={{ background: 'rgba(255,255,255,0.03)' }}
+          <div className="glass rounded-2xl p-5 cursor-pointer" style={{ background: 'var(--bg-card)' }}
             onClick={() => onNavigate('goals')}>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
@@ -193,7 +193,7 @@ export default function Dashboard({ onNavigate }: Props) {
             </div>
           </div>
         ) : (
-          <div className="glass rounded-2xl p-5 cursor-pointer" style={{ background: 'rgba(255,255,255,0.03)' }}
+          <div className="glass rounded-2xl p-5 cursor-pointer" style={{ background: 'var(--bg-card)' }}
             onClick={() => onNavigate('goals')}>
             <div className="flex items-center gap-2 mb-3">
               <TrendingUp size={14} className="text-blue-400" />
@@ -219,7 +219,7 @@ export default function Dashboard({ onNavigate }: Props) {
       {/* Habit Streaks — only shown when habits exist */}
       {hasHabits && (
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.13 }}
-          className="glass rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.03)' }}>
+          className="glass rounded-2xl p-5" style={{ background: 'var(--bg-card)' }}>
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Flame size={14} className="text-orange-400" />
@@ -248,13 +248,14 @@ export default function Dashboard({ onNavigate }: Props) {
 
       {/* Today's Win */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
-        className="glass rounded-2xl p-5" style={{ background: 'rgba(255,255,255,0.03)' }}>
+        className="glass rounded-2xl p-5" style={{ background: 'var(--bg-card)' }}>
         <div className="flex items-center gap-2 mb-3">
           <MessageSquare size={14} className="text-purple-400" />
           <span className="text-xs text-gray-400 uppercase tracking-widest font-semibold">Today's Win</span>
         </div>
         <textarea
-          className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-blue-500/40 resize-none"
+          className="w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/40 resize-none"
+          style={{ background: 'var(--bg-input)', borderColor: 'var(--border-input)', color: 'var(--text-1)' }}
           placeholder="What's one thing you're proud of today?"
           rows={2}
           value={todayWin}

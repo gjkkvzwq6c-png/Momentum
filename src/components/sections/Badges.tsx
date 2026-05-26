@@ -37,7 +37,7 @@ export default function Badges() {
 
       {/* Progress */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-        className="glass rounded-2xl p-4" style={{ background: 'rgba(255,255,255,0.03)' }}>
+        className="glass rounded-2xl p-4" style={{ background: 'var(--bg-card)' }}>
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-semibold text-white">Collection Progress</span>
           <span className="text-sm font-bold text-blue-400">{unlocked.length}/{state.badges.length}</span>
@@ -70,7 +70,7 @@ export default function Badges() {
           <div className="flex justify-center gap-4 mt-4">
             {['🎯', '🔥', '⚡'].map((icon, i) => (
               <div key={i} className="w-10 h-10 rounded-xl flex items-center justify-center text-xl opacity-30"
-                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                style={{ background: 'var(--bg-card-inner)', border: '1px solid rgba(255,255,255,0.06)' }}>
                 {icon}
               </div>
             ))}
@@ -118,9 +118,9 @@ export default function Badges() {
                   initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.04 }}
                   onClick={() => setSelected(badge)} whileTap={{ scale: 0.98 }}
                   className="w-full glass rounded-xl p-3 flex items-center gap-3 text-left"
-                  style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  style={{ background: 'var(--bg-card-empty)', border: '1px solid rgba(255,255,255,0.05)' }}>
                   <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
-                    style={{ background: 'rgba(255,255,255,0.05)' }}>
+                    style={{ background: 'var(--bg-card-inner)' }}>
                     <span className="text-2xl opacity-40">{badge.icon}</span>
                   </div>
                   <div className="flex-1 min-w-0">

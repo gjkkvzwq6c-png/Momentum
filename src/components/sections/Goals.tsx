@@ -108,7 +108,7 @@ export default function Goals() {
 
           return (
             <motion.div key={goal.id} layout className="glass rounded-2xl overflow-hidden"
-              style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.07)' }}>
+              style={{ background: 'var(--bg-card-alt)', border: '1px solid rgba(255,255,255,0.07)' }}>
               {/* Goal Header */}
               <div className="p-4 cursor-pointer" onClick={() => setExpanded(isOpen ? null : goal.id)}>
                 <div className="flex items-start gap-3">
@@ -169,7 +169,7 @@ export default function Goals() {
                           {goal.microGoals.map(micro => (
                             <motion.div key={micro.id} layout
                               className="flex items-start gap-3 p-3 rounded-xl cursor-pointer group"
-                              style={{ background: 'rgba(255,255,255,0.03)' }}
+                              style={{ background: 'var(--bg-card)' }}
                               onClick={() => toggleMicro(goal.id, micro)}>
                               <div className="mt-0.5 shrink-0">
                                 {micro.status === 'completed'
@@ -208,7 +208,7 @@ export default function Goals() {
 
                       {/* Notes */}
                       {goal.notes && (
-                        <div className="text-xs text-gray-400 p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                        <div className="text-xs text-gray-400 p-3 rounded-xl" style={{ background: 'var(--bg-card)' }}>
                           {goal.notes}
                         </div>
                       )}
@@ -235,7 +235,7 @@ export default function Goals() {
         {state.macroGoals.length === 0 && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
             className="rounded-2xl p-8 text-center"
-            style={{ background: 'rgba(255,255,255,0.02)', border: '1px dashed rgba(255,255,255,0.08)' }}>
+            style={{ background: 'var(--bg-card-empty)', border: '1px dashed rgba(255,255,255,0.08)' }}>
             <div className="w-14 h-14 rounded-2xl mx-auto flex items-center justify-center mb-4"
               style={{ background: 'rgba(59,130,246,0.1)' }}>
               <Target size={26} className="text-blue-400" />
@@ -285,7 +285,8 @@ export default function Goals() {
               <label className="block text-xs text-gray-400 mb-1.5 font-medium uppercase tracking-wide">Weight %</label>
               <input type="number" min={1} max={100} value={microForm.contributionWeight}
                 onChange={e => setMicroForm(f => ({ ...f, contributionWeight: +e.target.value }))}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500/50" />
+                className="w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500/50"
+                style={{ background: 'var(--bg-input)', borderColor: 'var(--border-input)', color: 'var(--text-1)' }} />
             </div>
           </div>
           <Input label="Due Date" type="date" value={microForm.dueDate} onChange={e => setMicroForm(f => ({ ...f, dueDate: e.target.value }))} />
@@ -298,7 +299,7 @@ export default function Goals() {
       <Modal open={!!showEditGoal} onClose={() => setShowEditGoal(null)} title="Goal Details">
         {showEditGoal && (
           <div className="space-y-3">
-            <div className="p-4 rounded-xl text-sm text-gray-300" style={{ background: 'rgba(255,255,255,0.04)' }}>
+            <div className="p-4 rounded-xl text-sm text-gray-300" style={{ background: 'var(--bg-card-inner)' }}>
               <p className="font-bold text-white mb-1">{showEditGoal.title}</p>
               <p className="text-gray-400">{showEditGoal.category} · {showEditGoal.priority} priority</p>
               <p className="text-gray-500 text-xs mt-1">Deadline: {new Date(showEditGoal.deadline).toLocaleDateString()}</p>

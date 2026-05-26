@@ -105,7 +105,7 @@ export interface FocusSession {
 export interface UserSettings {
   name: string;
   businessName: string;
-  theme: 'dark' | 'system';
+  theme: 'dark' | 'light';
   motivationalTone: 'aggressive' | 'balanced' | 'gentle';
   onboardingComplete: boolean;
   onboardingAnswers: {

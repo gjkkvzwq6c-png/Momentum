@@ -24,7 +24,7 @@ export default function Navigation({ active, onChange }: Props) {
     <>
       {/* Top bar */}
       <div className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-3"
-        style={{ background: 'rgba(10,10,15,0.95)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+        style={{ background: 'var(--bg-nav-top)', backdropFilter: 'blur(20px)', borderBottom: '1px solid var(--border-nav-top)' }}>
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center">
             <Zap size={14} className="text-white" />
@@ -36,7 +36,7 @@ export default function Navigation({ active, onChange }: Props) {
 
       {/* Bottom nav */}
       <div className="fixed bottom-0 left-0 right-0 z-40 px-2 pb-safe"
-        style={{ background: 'rgba(10,10,15,0.97)', backdropFilter: 'blur(20px)', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+        style={{ background: 'var(--bg-nav-bottom)', backdropFilter: 'blur(20px)', borderTop: '1px solid var(--border-nav-bottom)' }}>
         <div className="flex items-center justify-around py-2 max-w-lg mx-auto">
           {navItems.map(item => {
             const isActive = active === item.id;
